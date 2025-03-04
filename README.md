@@ -61,4 +61,4 @@ bun/npm install jspdf
 bun/npm install tailwindcss @tailwindcss/vite
 
 
-bun dev / npmrun dev
+bun dev / npm run dev
