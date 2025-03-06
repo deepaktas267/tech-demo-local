@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  backend:
+    container_name: "recipe_backend"
+    build: 
+      context: ./backend
+    ports:
+      - "8001:8000"
+
+  frontend:
+    container_name: "recipe_frontend"
+    build: 
+      context: ./frontend
+    ports:
+      - "5173:5173"
