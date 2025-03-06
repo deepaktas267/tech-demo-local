@@ -11,9 +11,23 @@ from datetime import datetime, timedelta
 from pydantic import BaseModel
 from typing import List
 from sqlalchemy import func
-from fastapi import FastAPI, HTTPException, Depends
-from sqlalchemy.orm import Session
-from typing import List
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, create_engine
+from sqlalchemy.orm import relationship, sessionmaker
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+import logging
+from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship, Session
+import pymysql
+from passlib.context import CryptContext
+
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # FastAPI App Initialization
 app = FastAPI()
@@ -21,20 +35,26 @@ app = FastAPI()
 # CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Change this for production
+    allow_origins=["*"],  # Change this for production
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
+
 # Database Configuration
-DATABASE_URL = "mysql+pymysql://demo:bakihanma@localhost/recipe"
-engine = create_engine(DATABASE_URL)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, expire_on_commit=False)
+AZURE_MYSQL_HOST = "recipedemoserver.mysql.database.azure.com"
+AZURE_MYSQL_USER = "demo"
+AZURE_MYSQL_PASSWORD = "Bakihanma267$"
+AZURE_MYSQL_DB = "recipe"
+
+DATABASE_URL = f"mysql+pymysql://{AZURE_MYSQL_USER}:{AZURE_MYSQL_PASSWORD}@{AZURE_MYSQL_HOST}:3306/{AZURE_MYSQL_DB}?ssl_ca=/etc/ssl/certs/ca-certificates.crt"
+
+engine = create_engine(DATABASE_URL, pool_pre_ping=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
 Base = declarative_base()
 
-# Password Hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # JWT Config
 SECRET_KEY = "38fbd608face41326ec160e316b0c8cb3b2cd42d4ad3b2852540c16cd7d493be"
@@ -86,11 +106,15 @@ class RecipeFeedback(Base):
 # Create Tables Automatically on Startup
 Base.metadata.create_all(bind=engine)
 
+
 # Dependency: Get Database Session
 def get_db():
     db = SessionLocal()
     try:
         yield db
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        raise HTTPException(status_code=500, detail="Database connection failed")
     finally:
         db.close()
 
@@ -106,6 +130,7 @@ def create_access_token(data: dict, expires_delta: timedelta = timedelta(hours=T
     except Exception as e:
         print(f"JWT Token Generation Error: {e}")
         raise HTTPException(status_code=500, detail="Token generation failed")
+
 
 
 # Pydantic Models for Validation
@@ -337,7 +362,6 @@ def delete_saved_recipe(user_id: int, recipe_id: int, db: Session = Depends(get_
     db.delete(recipe)
     db.commit()
     db.close()  # Ensure the session is closed
-
     return {"message": "Recipe deleted successfully"}
 
 
@@ -436,4 +460,3 @@ def get_popular_recipes(db: Session = Depends(get_db)):
         }
         for recipe in popular_recipes
     ]
-
