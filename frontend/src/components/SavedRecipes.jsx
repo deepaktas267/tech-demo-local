@@ -21,7 +21,7 @@ function SavedRecipes({ userId, handleOpenFeedbackForm }) {
   const fetchSavedRecipes = async () => {
     try {
       console.log(`Fetching saved recipes for user: ${currentUserId}`);
-      const response = await fetch(`http://localhost:8000/saved-recipes/${currentUserId}`, {
+      const response = await fetch(`http://localhost:8001/saved-recipes/${currentUserId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -51,7 +51,7 @@ function SavedRecipes({ userId, handleOpenFeedbackForm }) {
       console.log(`Deleting recipe ${recipeId} for user ${currentUserId}...`);
       
       // Add a URL log to verify the correct endpoint
-      const url = `http://localhost:8000/saved-recipes/${currentUserId}/${recipeId}/`;
+      const url = `http://localhost:8001/saved-recipes/${currentUserId}/${recipeId}/`;
       console.log("DELETE request URL:", url);
       
       // Log the token (first few chars for security)
