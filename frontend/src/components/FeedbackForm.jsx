@@ -16,7 +16,7 @@ function FeedbackForm({ feedbackRecipe, setShowFeedbackForm, onSubmitSuccess }) 
     }
 
     try {
-      const response = await fetch("http://localhost:8000/recipe-feedback/", {
+      const response = await fetch("http://localhost:8001/recipe-feedback/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
