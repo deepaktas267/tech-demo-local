@@ -9,7 +9,7 @@ function RecipeSearch({ userId }) {
     const [dialogData, setDialogData] = useState(null);
 
     const handleSearchRecipes = async () => {
-        const response = await fetch("http://localhost:8000/recipes/", {
+        const response = await fetch("http://localhost:8001/recipes/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -67,7 +67,7 @@ function RecipeSearch({ userId }) {
         };
 
         try {
-            const response = await fetch("http://localhost:8000/save-recipe/", {
+            const response = await fetch("http://localhost:8001/save-recipe/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
