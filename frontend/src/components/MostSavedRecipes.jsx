@@ -8,7 +8,7 @@ const MostSavedRecipes = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8000/most-saved-recipes/") // Update with your actual backend URL
+            .get("http://localhost:8001/most-saved-recipes/") // Update with your actual backend URL
             .then((response) => {
                 setRecipes(response.data);
                 setLoading(false);
