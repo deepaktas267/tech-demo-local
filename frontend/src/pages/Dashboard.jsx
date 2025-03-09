@@ -40,7 +40,7 @@ export default function Dashboard() {
 
   const fetchSavedRecipes = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/saved-recipes/${userId}/`, {
+      const response = await fetch(`http://localhost:8001/saved-recipes/${userId}/`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -61,7 +61,7 @@ export default function Dashboard() {
     try {
       console.log(`Dashboard: Deleting recipe ${recipeId} for user ${userId}...`);
       
-      const response = await fetch(`http://localhost:8000/saved-recipes/${userId}/${recipeId}/`, {
+      const response = await fetch(`http://localhost:8001/saved-recipes/${userId}/${recipeId}/`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
