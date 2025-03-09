@@ -6,7 +6,7 @@ const FeedbackList = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:8000/feedback-list/")
+            .get("http://localhost:8001/feedback-list/")
             .then((response) => setFeedbacks(response.data))
             .catch((error) => console.error("Error fetching feedback:", error));
     }, []);
