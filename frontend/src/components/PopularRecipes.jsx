@@ -7,7 +7,7 @@ const PopularRecipes = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/popular-recipes/")
+      .get("http://localhost:8001/popular-recipes/")
       .then((response) => setRecipes(response.data))
       .catch((error) => console.error("Error fetching recipes:", error));
   }, []);
